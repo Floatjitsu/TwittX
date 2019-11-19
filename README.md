@@ -11,7 +11,7 @@ Milestones:
 
 17.12.2019 (Feedback)
 * SpaceX-API
-* Möglichkeit für Twitter-User zu abonnieren.
 * NASA: Nearest Objects
 
 14.01.2020 (Submission)
+* Möglichkeit für Twitter-User zu abonnieren.
