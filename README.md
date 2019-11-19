@@ -15,3 +15,13 @@ Milestones:
 
 14.01.2020 (Submission)
 * Möglichkeit für Twitter-User zu abonnieren.
+
+
+NodeJS Styling Guide:
+https://github.com/felixge/node-style-guide
+
+Ressources:
+https://api.nasa.gov/
+https://docs.spacexdata.com/?version=latest
+https://developer.twitter.com/en/docs/api-reference-index
+https://www.npmjs.com/package/twitter
