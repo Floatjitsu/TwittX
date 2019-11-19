@@ -8,6 +8,7 @@ Milestones:
 *  Deploy on VPS & connect GitLab
 *  Twitter-API Anbindung
 *  Public Tweet: NASA Picture of the day
+
 17.12.2019 (Feedback)
 * SpaceX-API
 * Möglichkeit für Twitter-User zu abonnieren.
