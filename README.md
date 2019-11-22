@@ -25,3 +25,6 @@ Ressources:
 * https://docs.spacexdata.com/?version=latest
 * https://developer.twitter.com/en/docs/api-reference-index
 * https://www.npmjs.com/package/twitter
+
+Twitter Account:
+* https://twitter.com/TwittX15
