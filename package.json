@@ -18,5 +18,8 @@
     "API"
   ],
   "author": "Arian, Philipp, Timur",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "twit": "^2.2.11"
+  }
 }
