@@ -1,5 +1,9 @@
 # TwittX-Bot
 
+clone repository
+npm install
+node app.js
+
 Twitter Bot that tweets information provided by NASA, SpaceX ...
 
 Milestones:
