@@ -1,0 +1,22 @@
+{
+  "name": "twittx-bot",
+  "version": "1.0.0",
+  "description": "Twitter Bot that tweets information provided by NASA, SpaceX ...",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://r-n-d.informatik.hs-augsburg.de:8080/nodejs-ws1920/twittx/twittx-bot"
+  },
+  "keywords": [
+    "twitter;",
+    "SpaceX;",
+    "NASA;",
+    "NodeJS;",
+    "API"
+  ],
+  "author": "Arian, Philipp, Timur",
+  "license": "ISC"
+}
