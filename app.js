@@ -1,8 +1,8 @@
-var Twit = require('twit');
-var config = require('./config.js');
+const Twit = require('twit');
+const config = require('./config.js');
 
-var T = new Twit(config);
+const T = new Twit(config);
 
-T.post('statuses/update', { status: 'Hello World! 🚀🐦' }, function(err, data, reponse) {
-  console.log(data)
-})
+T.post('statuses/update', { status: 'Hello World! 🚀🐦' }, (err, data, reponse) => {
+  console.log(data);
+});
