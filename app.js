@@ -2,6 +2,11 @@ const Twit = require('twit');
 const config = require('./config.js');
 const nasa = require('./modules/nasa.js');
 
+// ----- Firebase Test start ----- //
+const firebase = require('./modules/firebase.js');
+firebase.writeTestData();
+// ----- Firebase Test end ----- //
+
 const T = new Twit(config.twitter);
 
 //Picture or video of the day post
