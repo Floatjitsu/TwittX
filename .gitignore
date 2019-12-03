@@ -106,6 +106,3 @@ dist
 
 # Image files
 *.jpg
-
-# The Firebase API Authentication File
-twittx-9bf78-firebase-adminsdk-8w28w-fbcc126d8f.json
