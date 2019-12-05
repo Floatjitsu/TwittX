@@ -20,6 +20,7 @@
   "author": "Arian, Philipp, Timur",
   "license": "ISC",
   "dependencies": {
+    "firebase-admin": "^8.8.0",
     "twit": "^2.2.11"
   }
 }

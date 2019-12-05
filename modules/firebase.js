@@ -15,4 +15,37 @@ const writeTestData = () => {
     });
 };
 
-module.exports = {writeTestData};
+const spacex = {
+    launches: {
+        writeEntry: (postId, missionName, launchDate) => {
+            firebase.database().ref('spaceX/posts/launches/' + postId).set({
+                missionName: missionName,
+                launchDate: launchDate,
+                postDate: getToday()
+            });
+        },
+        noEntryExists: (postDate) => {
+            return new Promise((resolve, reject) => {
+                firebase.database().ref('spaceX/posts/launches/').orderByChild('launchDate').equalTo(postDate)
+                    .once('value').then(snapshot => {
+                        if(snapshot.exists()) {
+                            reject('A post for the date ' + postDate + ' already exists!');
+                        } else {
+                            resolve();
+                        }
+                    });
+            });
+        }
+    }
+};
+
+const getToday = () => {
+    const today = new Date();
+    const day = String(today.getDate()).padStart(2, '0');
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const year = today.getFullYear();
+
+    return month + '/' + day + '/' + year + ' ' + today.toLocaleTimeString('en');
+}
+
+module.exports = {writeTestData, spacex};
