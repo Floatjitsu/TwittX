@@ -39,4 +39,4 @@ const spacex = {
     }
 };
 
-module.exports = {writeTestData, spacex};
+module.exports = {spacex};
