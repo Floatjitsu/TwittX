@@ -7,14 +7,6 @@ firebase.initializeApp({
     databaseURL: config.firebase.app_url
 });
 
-const writeTestData = () => {
-    firebase.database().ref('spaceX/posts/0002').set({
-        postId: 'ZzZZr789',
-        posted: true,
-        postDate: '2019-12-03'
-    });
-};
-
 const spacex = {
     launches: {
         writeEntry: (postId, missionName, launchDate) => {

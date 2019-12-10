@@ -4,21 +4,18 @@ const nasa = require('./modules/nasa.js');
 const spacex = require('./modules/spacex.js');
 const firebase = require('./modules/firebase.js');
 const T = new Twit(config.twitter);
-const hashtags = ['space','universe','cosmos','stars'];
 
 //Picture or video of the day post
 nasa.pictureOfTheDay.then(result => {
-  var hashtag = hashtags[Math.floor(Math.random()*hashtags.length)];
-  console.log(hashtag)
     switch (result.mediaType) {
         case 'video':
-            T.post('statuses/update', {status: 'Here is your #NASA video of the day #' + hashtag + result.data }, (err, data, response) => {
+            T.post('statuses/update', {status: 'Here is your NASA video of the day \n' + result.data }, (err, data, response) => {
                 console.log(data);
             });
             break;
         case 'image':
             T.post('media/upload', result.data, (err, data, response) => {
-                T.post('statuses/update', {status: 'Here is your NASA picture of the day #' + hashtag, media_ids: data.media_id_string}, (err2, data2, response2) => {
+                T.post('statuses/update', {status: 'Here is your NASA picture of the day', media_ids: data.media_id_string}, (err2, data2, response2) => {
                     console.log(data2);
                 });
             });
@@ -33,7 +30,7 @@ spacex.latestLaunch.then(result => {
     //At first we have to check if a post containing result.launchDate already exists in our firebase db
     firebase.spacex.launches.noEntryExists(result.launchDate).then(() => {
         //If we get to this point, no entry exists and we can make a new post
-        const status = '#SpaceX Mission ' + result.missionName + ' launched successfully on ' + result.launchDate;
+        const status = 'SpaceX Mission ' + result.missionName + ' launched successfully on ' + result.launchDate;
         T.post('media/upload', result.data, (err, data, response) => {
             T.post('statuses/update', {status: status, media_ids: data.media_id_string}, (err2, data2, response2) => {
                 if(!err2) {
