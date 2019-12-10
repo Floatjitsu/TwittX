@@ -33,4 +33,22 @@ const pictureOfTheDay = new Promise((resolve, reject) => {
     });
 });
 
-module.exports = {pictureOfTheDay/*, new Variable*/};
+const nearEarthObjects = new Promise((resolve, reject) => {
+    //const today = new Date(); //todays date
+    //const formattedToday =  ""; //todays date with form yyy-mm-dd
+    request('https://api.nasa.gov/neo/rest/v1/feed?end_date=2019-12-10&api_key=' + config.nasa.api_key, (error, response, body) => {
+        const jsonBody = JSON.parse(body);
+        const countObjects = jsonBody.element_count;
+        //const jsonObjects = jsonBody;
+
+        if (response.statusCode === 200) {
+            resolve({
+                countObjects
+            });
+        }else {
+			reject('Error while making NASA NearEartObjects API request');
+		}
+    });
+});
+
+module.exports = {pictureOfTheDay, nearEarthObjects};
