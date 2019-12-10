@@ -4,7 +4,7 @@ const nasa = require('./modules/nasa.js');
 const spacex = require('./modules/spacex.js');
 const firebase = require('./modules/firebase.js');
 const T = new Twit(config.twitter);
-/*
+
 //Picture or video of the day post
 nasa.pictureOfTheDay.then(result => {
     switch (result.mediaType) {
