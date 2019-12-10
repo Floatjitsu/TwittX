@@ -7,18 +7,10 @@ firebase.initializeApp({
     databaseURL: config.firebase.app_url
 });
 
-const writeTestData = () => {
-    firebase.database().ref('spaceX/posts/0002').set({
-        postId: 'ZzZZr789',
-        posted: true,
-        postDate: '2019-12-03'
-    });
-};
-
 const spacex = {
-    launches: {
+    latestLaunches: {
         writeEntry: (postId, missionName, launchDate) => {
-            firebase.database().ref('spaceX/posts/launches/' + postId).set({
+            firebase.database().ref('spaceX/posts/latestLaunches/' + postId).set({
                 missionName: missionName,
                 launchDate: launchDate,
                 postDate: new Date().toLocaleString('en')
@@ -26,7 +18,7 @@ const spacex = {
         },
         noEntryExists: (postDate) => {
             return new Promise((resolve, reject) => {
-                firebase.database().ref('spaceX/posts/launches/').orderByChild('launchDate').equalTo(postDate)
+                firebase.database().ref('spaceX/posts/latestLaunches/').orderByChild('launchDate').equalTo(postDate)
                     .once('value').then(snapshot => {
                         if(snapshot.exists()) {
                             reject('A post for the date ' + postDate + ' already exists!');
@@ -39,4 +31,4 @@ const spacex = {
     }
 };
 
-module.exports = {writeTestData, spacex};
+module.exports = {spacex};
