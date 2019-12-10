@@ -8,9 +8,9 @@ firebase.initializeApp({
 });
 
 const spacex = {
-    launches: {
+    latestLaunches: {
         writeEntry: (postId, missionName, launchDate) => {
-            firebase.database().ref('spaceX/posts/launches/' + postId).set({
+            firebase.database().ref('spaceX/posts/latestLaunches/' + postId).set({
                 missionName: missionName,
                 launchDate: launchDate,
                 postDate: new Date().toLocaleString('en')
@@ -18,7 +18,7 @@ const spacex = {
         },
         noEntryExists: (postDate) => {
             return new Promise((resolve, reject) => {
-                firebase.database().ref('spaceX/posts/launches/').orderByChild('launchDate').equalTo(postDate)
+                firebase.database().ref('spaceX/posts/latestLaunches/').orderByChild('launchDate').equalTo(postDate)
                     .once('value').then(snapshot => {
                         if(snapshot.exists()) {
                             reject('A post for the date ' + postDate + ' already exists!');
