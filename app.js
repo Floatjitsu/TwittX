@@ -25,6 +25,15 @@ nasa.pictureOfTheDay.then(result => {
   console.log(err);
 });
 
+//Post with NearEarthObjects API
+nasa.nearEarthObjects.then(result => {
+  T.post('statuses/update', {status: 'Today are ' + result.countObjects + ' objects near to the earth!'}, (err, data, response) => {
+    console.log("NEO: The following text \"" + data.text + "\" has been successfully posted at " + data.created_at + ".");
+  });
+}).catch(err => {
+  console.log(err);
+});
+
 //SpaceX latest launch post
 spacex.latestLaunch.then(result => {
     //At first we have to check if a post containing result.launchDate already exists in our firebase db
