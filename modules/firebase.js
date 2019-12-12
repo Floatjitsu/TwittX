@@ -28,6 +28,15 @@ const spacex = {
                     });
             });
         }
+    },
+    nextLaunches: {
+        writeEntry: (postId, missionName, launchDate) => {
+            firebase.database().ref('spaceX/posts/nextLaunches/' + postId).set({
+                missionName: missionName,
+                launchDate: launchDate,
+                postDate: new Date().toLocaleString('en')
+            });
+        }
     }
 };
 

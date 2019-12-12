@@ -4,7 +4,7 @@ const nasa = require('./modules/nasa.js');
 const spacex = require('./modules/spacex.js');
 const firebase = require('./modules/firebase.js');
 const T = new Twit(config.twitter);
-
+/*
 //Picture or video of the day post
 nasa.pictureOfTheDay.then(result => {
     switch (result.mediaType) {
@@ -24,16 +24,7 @@ nasa.pictureOfTheDay.then(result => {
 }).catch(err => {
   console.log(err);
 });
-
-//Post with NearEarthObjects API
-nasa.nearEarthObjects.then(result => {
-  T.post('statuses/update', {status: 'Today are ' + result.countObjects + ' objects near to the earth!'}, (err, data, response) => {
-    console.log("NEO: The following text \"" + data.text + "\" has been successfully posted at " + data.created_at + ".");
-  });
-}).catch(err => {
-  console.log(err);
-});
-
+*/
 //SpaceX latest launch post
 spacex.latestLaunch.then(result => {
     //At first we have to check if a post containing result.launchDate already exists in our firebase db
@@ -59,7 +50,12 @@ spacex.latestLaunch.then(result => {
 
 //SpaceX next launch posts
 spacex.nextLaunch.then(result => {
-    console.log(result);
+    const status = 'The next SpaceX Mission ' + result.missionName + ' will launch on ' + result.launchDate + '. \n' +
+        'Read more here: ' + result.redditThread;
+    T.post('statuses/update', {status: status}, (error, data, response) => {
+        firebase.spacex.nextLaunches.writeEntry(data.id, result.missionName, result.launchDate);
+        console.log(data);
+    });
 }).catch(err => {
     console.log(err);
 });
