@@ -16,12 +16,12 @@ const spacex = {
                 postDate: new Date().toLocaleString('en')
             });
         },
-        noEntryExists: (postDate) => {
+        noEntryExists: (launchDate) => {
             return new Promise((resolve, reject) => {
-                firebase.database().ref('spaceX/posts/latestLaunches/').orderByChild('launchDate').equalTo(postDate)
+                firebase.database().ref('spaceX/posts/latestLaunches/').orderByChild('launchDate').equalTo(launchDate)
                     .once('value').then(snapshot => {
                         if(snapshot.exists()) {
-                            reject('A post for the date ' + postDate + ' already exists!');
+                            reject('A post for the latest launch date ' + launchDate + ' already exists!');
                         } else {
                             resolve();
                         }
@@ -35,6 +35,18 @@ const spacex = {
                 missionName: missionName,
                 launchDate: launchDate,
                 postDate: new Date().toLocaleString('en')
+            });
+        },
+        noEntryExists: (launchDate) => {
+            return new Promise((resolve, reject) => {
+                firebase.database().ref('spaceX/posts/nextLaunches/').orderByChild('launchDate').equalTo(launchDate)
+                    .once('value').then(snapshot => {
+                        if(snapshot.exists()) {
+                            reject('A post for the upcoming launch date ' + launchDate + ' already exists!');
+                        } else {
+                            resolve();
+                        }
+                    });
             });
         }
     }
