@@ -27,8 +27,8 @@ nasa.pictureOfTheDay.then(result => {
 
 //Post with NearEarthObjects API
 nasa.nearEarthObjects.then(result => {
-  T.post('statuses/update', {status: 'Today are ' + result.countObjects + ' objects near to the earth!'}, (err, data, response) => {
-    console.log("NEO: The following text \"" + data.text + "\" has been successfully posted at " + data.created_at + ".");
+  T.post('statuses/update', {status: result.twitText }, (err, data, response) => {
+    console.log('NEO: The following text \"' + data.text + '\" has been successfully posted at ' + data.created_at + '.');
   });
 }).catch(err => {
   console.log(err);
