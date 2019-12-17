@@ -66,12 +66,12 @@ const nearEarthObjects = new Promise((resolve, reject) => {
         
         
 
-        const twitText = "Today are " + countObjects + " asteroids near the Earth.\n" +
-                                 "The nearest asteroid has the name " + name + " and is " + parseFloat(missDistance).toFixed(2) + " kilometers away from the Earth at the time of "+ closeApproachTime + ".\n" +
-                                 "Estimated size: " + parseFloat(sizeMetersMax).toFixed(2) + " meter\n" +
-                                 "Estimated speed: " + parseFloat(velosityKmh).toFixed(2) + " km/h\n" +
-                                 //TODO "Is Hazardous?: " + potentiallyHazardous + "\n" +
-                                 "Further Informations: \n" +
+        const twitText = 'Today are ' + countObjects + ' asteroids near the Earth.\n' +
+                                 'The nearest asteroid has the name ' + name + ' and is ' + parseFloat(missDistance).toFixed(2) + ' kilometers away from the Earth at the time of '+ closeApproachTime + '.\n' +
+                                 'Estimated size: ' + parseFloat(sizeMetersMax).toFixed(2) + ' meter\n' +
+                                 'Estimated speed: ' + parseFloat(velosityKmh).toFixed(2) + ' km/h\n' +
+                                 //TODO 'Is Hazardous?: ' + potentiallyHazardous + '\n' +
+                                 'Further Informations: \n' +
                                  furtherInfoUrl;
 
         if (response.statusCode === 200) {
