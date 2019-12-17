@@ -42,7 +42,6 @@ const nearEarthObjects = new Promise((resolve, reject) => {
         let closestIdx = 0;
         let closestObject = 0;
         jsonObjects[today].forEach(function(nearObject, index){
-            console.log(index, nearObject.close_approach_data[0].miss_distance.kilometers);
             if(index === 0){
                 closestObject = parseFloat(nearObject.close_approach_data[0].miss_distance.kilometers);
             }else{
@@ -51,7 +50,6 @@ const nearEarthObjects = new Promise((resolve, reject) => {
                     closestObject = parseFloat(nearObject.close_approach_data[0].miss_distance.kilometers);
                 }
             }
-            console.log(closestIdx, closestObject);
         });
         const nearestObject = jsonObjects[today][closestIdx]; //save closest object
         
@@ -75,9 +73,6 @@ const nearEarthObjects = new Promise((resolve, reject) => {
                                  //TODO "Is Hazardous?: " + potentiallyHazardous + "\n" +
                                  "Further Informations: \n" +
                                  furtherInfoUrl;
-
-        console.log(nearestObject);
-        console.log("Index", closestIdx);
 
         if (response.statusCode === 200) {
             resolve({
