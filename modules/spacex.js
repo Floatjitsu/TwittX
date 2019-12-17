@@ -8,7 +8,8 @@ const latestLaunch = new Promise((resolve, reject) => {
 			const jsonBody = JSON.parse(body);
 			const missionName = jsonBody.mission_name;
 			const launchDate = jsonBody.launch_date_utc;
-			const imageUrl = jsonBody.links.flickr_images[0];
+			const imageUrl = jsonBody.links.flickr_images.length !== 0 ? jsonBody.links.flickr_images[0] :
+				jsonBody.links.mission_patch_small;
 			const fileName = imageUrl.split('/').pop();
 			request(imageUrl).pipe(fs.createWriteStream('./pictures/' + fileName)).on('close', () => {
                 const params = { encoding: 'base64' };

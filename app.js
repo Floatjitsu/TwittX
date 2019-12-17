@@ -5,7 +5,7 @@ const spacex = require('./modules/spacex.js');
 const firebase = require('./modules/firebase.js');
 const T = new Twit(config.twitter);
 const hashtags = ['space','universe','cosmos','stars'];
-
+/*
 //Picture or video of the day post
 nasa.pictureOfTheDay.then(result => {
     const hashtag = hashtags[Math.floor(Math.random()*hashtags.length)];
@@ -57,13 +57,15 @@ spacex.latestLaunch.then(result => {
     });
 }).catch(err => {
     console.log(err);
-});
+}); */
 
 //SpaceX next launch posts
 spacex.nextLaunch.then(result => {
     firebase.spacex.nextLaunches.noEntryExists(result.launchDate).then(() => {
-        const status = 'The next SpaceX Mission ' + result.missionName + ' will launch on ' + result.launchDate + '. \n' +
-                        'Read more here: ' + result.redditThread;
+        let status = 'The next SpaceX Mission ' + result.missionName + ' will launch on ' + result.launchDate + '. \n';
+        if(result.redditThread) {
+            status += 'Read more here: ' + result.redditThread;
+        }
         T.post('statuses/update', {status: status}, (error, data, response) => {
             if(!error) {
                 firebase.spacex.nextLaunches.writeEntry(data.id, result.missionName, result.launchDate);
