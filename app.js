@@ -5,7 +5,7 @@ const spacex = require('./modules/spacex.js');
 const firebase = require('./modules/firebase.js');
 const T = new Twit(config.twitter);
 const hashtags = ['space','universe','cosmos','stars'];
-/*
+
 //Picture or video of the day post
 nasa.pictureOfTheDay.then(result => {
     const hashtag = hashtags[Math.floor(Math.random()*hashtags.length)];
@@ -57,7 +57,7 @@ spacex.latestLaunch.then(result => {
     });
 }).catch(err => {
     console.log(err);
-}); */
+});
 
 //SpaceX next launch posts
 spacex.nextLaunch.then(result => {
