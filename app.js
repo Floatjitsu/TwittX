@@ -3,9 +3,13 @@ const config = require('./config.js');
 const nasa = require('./modules/nasa.js');
 const spacex = require('./modules/spacex.js');
 const firebase = require('./modules/firebase.js');
+const schedule = require('node-schedule');
 const T = new Twit(config.twitter);
 const hashtags = ['space','universe','cosmos','stars'];
 
+
+//runs Picture of the Day job every day at 12pm
+const sPOTD = schedule.scheduleJob('12 * * *', () => {
 //Picture or video of the day post
 nasa.pictureOfTheDay.then(result => {
     const hashtag = hashtags[Math.floor(Math.random()*hashtags.length)];
@@ -26,7 +30,11 @@ nasa.pictureOfTheDay.then(result => {
 }).catch(err => {
   console.log(err);
 });
+console.log('POTD executed');
+});
 
+//runs NearEartObjects job every day at 5pm
+const sNEO = schedule.scheduleJob('17 * * *', function(){
 //Post with NearEarthObjects API
 nasa.nearEarthObjects.then(result => {
   T.post('statuses/update', {status: result.twitText }, (err, data, response) => {
@@ -35,7 +43,12 @@ nasa.nearEarthObjects.then(result => {
 }).catch(err => {
   console.log(err);
 });
+console.log('NEO executed');
+});
 
+
+//runs SpaceX latest launch job every day at 1pm
+const sSXLL = schedule.scheduleJob('13 * * *', () => {
 //SpaceX latest launch post
 spacex.latestLaunch.then(result => {
     //At first we have to check if a post containing result.launchDate already exists in our firebase db
@@ -58,7 +71,11 @@ spacex.latestLaunch.then(result => {
 }).catch(err => {
     console.log(err);
 });
+console.log('SXLL executed');
+});
 
+//runs SpaceX next launch job every day at 2pm
+const sSXNL = schedule.scheduleJob('14 * * *', () => {
 //SpaceX next launch posts
 spacex.nextLaunch.then(result => {
     firebase.spacex.nextLaunches.noEntryExists(result.launchDate).then(() => {
@@ -77,4 +94,6 @@ spacex.nextLaunch.then(result => {
     });
 }).catch(err => {
     console.log(err);
+});
+console.log('SXNL executed');
 });
