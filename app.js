@@ -34,7 +34,7 @@ console.log('POTD executed');
 });
 
 //runs NearEartObjects job every day at 5pm
-const sNEO = schedule.scheduleJob('17 * * *', function(){
+const sNEO = schedule.scheduleJob('17 * * *', () =>{
 //Post with NearEarthObjects API
 nasa.nearEarthObjects.then(result => {
   T.post('statuses/update', {status: result.twitText }, (err, data, response) => {
