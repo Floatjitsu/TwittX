@@ -23,6 +23,8 @@ Milestones:
 
 NodeJS Styling Guide:
 https://github.com/felixge/node-style-guide
+For Styling:
+https://www.npmjs.com/package/eslint
 
 Ressources:
 * https://api.nasa.gov/
