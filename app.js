@@ -9,7 +9,7 @@ const hashtags = ['space','universe','cosmos','stars'];
 
 
 //runs Picture of the Day job every day at 12pm
-const sPOTD = schedule.scheduleJob('12 * * *', () => {
+const sPOTD = schedule.scheduleJob('0 12 * * *', () => {
 //Picture or video of the day post
 nasa.pictureOfTheDay.then(result => {
     const hashtag = hashtags[Math.floor(Math.random()*hashtags.length)];
@@ -34,7 +34,7 @@ console.log('POTD executed');
 });
 
 //runs NearEartObjects job every day at 5pm
-const sNEO = schedule.scheduleJob('17 * * *', () =>{
+const sNEO = schedule.scheduleJob('0 17 * * *', () =>{
 //Post with NearEarthObjects API
 nasa.nearEarthObjects.then(result => {
   T.post('statuses/update', {status: result.twitText }, (err, data, response) => {
@@ -48,7 +48,7 @@ console.log('NEO executed');
 
 
 //runs SpaceX latest launch job every day at 1pm
-const sSXLL = schedule.scheduleJob('13 * * *', () => {
+const sSXLL = schedule.scheduleJob('0 13 * * *', () => {
 //SpaceX latest launch post
 spacex.latestLaunch.then(result => {
     //At first we have to check if a post containing result.launchDate already exists in our firebase db
@@ -75,7 +75,7 @@ console.log('SXLL executed');
 });
 
 //runs SpaceX next launch job every day at 2pm
-const sSXNL = schedule.scheduleJob('14 * * *', () => {
+const sSXNL = schedule.scheduleJob('0 14 * * *', () => {
 //SpaceX next launch posts
 spacex.nextLaunch.then(result => {
     firebase.spacex.nextLaunches.noEntryExists(result.launchDate).then(() => {
