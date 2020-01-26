@@ -1,8 +1,11 @@
 # TwittX-Bot
 
-clone repository
-npm install
-node app.js
+### A Twitter Bot that tweets information provided by NASA and SpaceX
+
+### Getting started
+* Clone this repository
+* npm install
+* node app.js
 
 Twitter Bot that tweets information provided by NASA, SpaceX ...
 
