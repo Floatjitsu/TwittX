@@ -7,3 +7,4 @@ const Twitter = require('./modules/twitter');
 // Twitter.makeNextSpaceXLaunchPost();
 
 /* Lets start to refactor this */
+console.log(Twitter._getRandomHashtag());

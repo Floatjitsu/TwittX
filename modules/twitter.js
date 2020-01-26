@@ -3,14 +3,15 @@ const config = require('../config');
 const nasa = require('./nasa');
 const spaceX = require('./spacex');
 const firebase = require('./firebase');
+const hashtagJson = require('../hashtags');
 
 const twitter = new T(config.twitter);
-const hashtags = ['space','universe','cosmos','stars'];
+const hashtags = hashtagJson.hashtags;
 
 let status = '';
 
 const makePictureOfTheDayPost = () => {
-	const hashtag = '#' + _getRandomHashtag();
+	const hashtag = _getRandomHashtag();
 	nasa.pictureOfTheDay.then(result => {
 		switch (result.mediaType) {
 			case 'video':
