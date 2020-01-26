@@ -1,36 +1,21 @@
 # TwittX-Bot
 
-clone repository
-npm install
-node app.js
+### A Twitter Bot that tweets information provided by NASA and SpaceX
 
-Twitter Bot that tweets information provided by NASA, SpaceX ...
+#### Getting started
+Before you start developing on this app, you will need an API key file for the firebase database.
 
-Milestones:
+Contact the owner of this repo to receive the file and simply add it to the root node of this repository.
 
-03.12.2019
-*  Deploy on VPS & connect GitLab
-*  Twitter-API Anbindung
-*  Public Tweet: NASA Picture of the day
-
-17.12.2019 (Feedback)
-* SpaceX-API
-* NASA: Nearest Objects
-
-14.01.2020 (Submission)
-* Möglichkeit für Twitter-User zu abonnieren.
+### Twitter Account:
+https://twitter.com/TwittX15
 
 
 NodeJS Styling Guide:
-https://github.com/felixge/node-style-guide
-For Styling:
-https://www.npmjs.com/package/eslint
+* https://github.com/felixge/node-style-guide
 
 Ressources:
 * https://api.nasa.gov/
 * https://docs.spacexdata.com/?version=latest
 * https://developer.twitter.com/en/docs/api-reference-index
 * https://www.npmjs.com/package/twitter
-
-Twitter Account:
-* https://twitter.com/TwittX15

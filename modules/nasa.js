@@ -52,7 +52,7 @@ const nearEarthObjects = new Promise((resolve, reject) => {
             }
         });
         const nearestObject = jsonObjects[today][closestIdx]; //save closest object
-        
+
         const countObjects = jsonBody.element_count;
         const name = nearestObject.name;
         const missDistance = nearestObject.close_approach_data[0].miss_distance.kilometers;
@@ -61,10 +61,10 @@ const nearEarthObjects = new Promise((resolve, reject) => {
         const velosityKmh = nearestObject.close_approach_data[0].relative_velocity.kilometers_per_hour;
         const potentiallyHazardous = nearestObject.is_potentially_hazardous_asteroid;
         const furtherInfoUrl = nearestObject.nasa_jpl_url;
-        
-        
-        
-        
+
+
+
+
 
         const twitText = 'Today are ' + countObjects + ' asteroids near the Earth.\n' +
                                  'The nearest asteroid has the name ' + name + ' and is ' + parseFloat(missDistance).toFixed(2) + ' kilometers away from the Earth at the time of '+ closeApproachTime + '.\n' +
@@ -84,4 +84,42 @@ const nearEarthObjects = new Promise((resolve, reject) => {
     });
 });
 
-module.exports = {pictureOfTheDay, nearEarthObjects};
+const marsRoverPicture = new Promise((resolve, reject) => {
+    const roverNames = ['Opportunity', 'Curiosity'];
+    const randomRoverName = roverNames[Math.floor(Math.random() * roverNames.length)];
+    request('https://api.nasa.gov/mars-photos/api/v1/manifests/' + randomRoverName + '?api_key=' + config.nasa.api_key, (error, response, body) => {
+        if (!error) {
+            const manifestPhotoArray = JSON.parse(body).photo_manifest.photos;
+            const randomDate = manifestPhotoArray[Math.floor(Math.random() * manifestPhotoArray.length)].earth_date;
+            request('https://api.nasa.gov/mars-photos/api/v1/rovers/' + randomRoverName + '/photos?earth_date=' + randomDate + '&api_key=' + config.nasa.api_key, (error2, response2, body2) => {
+                if (!error2) {
+                    const photoArray = JSON.parse(body2).photos;
+                    const randomPhotoUrl = photoArray[Math.floor(Math.random() * photoArray.length)].img_src;
+                    const fileName = randomPhotoUrl.split('/').pop();
+                    request(randomPhotoUrl).pipe(fs.createWriteStream('./pictures/' + fileName)).on('close', () => {
+                        const params = {
+                            encoding: 'base64'
+                        };
+                        const b64 = fs.readFileSync('pictures/' + fileName, params);
+                        resolve({
+                            info: {
+                                roverName: randomRoverName,
+                                date: randomDate
+                            },
+                            data: {
+                                media_data: b64
+                            }
+                        });
+                    });
+                } else {
+                    reject(error2);
+                }
+            });
+        } else {
+            reject(error);
+        }
+    });
+});
+
+
+module.exports = {pictureOfTheDay, nearEarthObjects, marsRoverPicture};
