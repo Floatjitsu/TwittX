@@ -5,22 +5,30 @@ const nasa = require('./nasa.js');
 const twitter = new T(config.twitter);
 const hashtags = ['space','universe','cosmos','stars'];
 
+let status = '';
+
 const makePictureOfTheDayPost = () => {
 	const hashtag = '#' + _getRandomHashtag();
 	nasa.pictureOfTheDay.then(result => {
 		switch (result.mediaType) {
 			case 'video':
-				const status = 'Here is your #NASA video of the day ' + hashtag;
+				status = 'Here is your #NASA video of the day ' + hashtag;
 				/* Careful! This has not been tested yet! */
 				// _makeTextPost(status);
 				break;
 			case 'image':
-				const status = 'Here is your #NASA picture of the day ' + hashtag;
+				status = 'Here is your #NASA picture of the day ' + hashtag;
 				_makeImagePost(result.data, status);
 				break;
 		}
 	}).catch(error => {
 		console.log(error);
+	});
+};
+
+const makeNearestEarthObjectPost = () => {
+	nasa.nearEarthObjects.then(result => {
+		_makeTextPost(result.twitText);
 	});
 };
 
@@ -51,8 +59,8 @@ const _makeTextPost = status => {
 	twitter.post('statuses/update', {status}, (error, data, response) => {
 		console.log('A new post with the status ´' + data.text + '` has successfully been posted at ' + new Date().toLocaleString('en'));
 	});
-}
+};
 
 const _getRandomHashtag = () => hashtags[Math.floor(Math.random()*hashtags.length)];
 
-module.exports = {makePictureOfTheDayPost};
+module.exports = {makePictureOfTheDayPost, makeNearestEarthObjectPost};

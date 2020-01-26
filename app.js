@@ -9,7 +9,8 @@ const hashtags = ['space','universe','cosmos','stars'];
 
 const Twitter = require('./modules/twitter');
 
-Twitter.makePictureOfTheDayPost();
+// Twitter.makePictureOfTheDayPost();
+Twitter.makeNearestEarthObjectPost();
 
 /* Lets start to refactor this */
 
