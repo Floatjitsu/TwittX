@@ -11,7 +11,8 @@ const Twitter = require('./modules/twitter');
 
 // Twitter.makePictureOfTheDayPost();
 // Twitter.makeNearestEarthObjectPost();
-Twitter.makeLatestSpaceXLaunchPost();
+// Twitter.makeLatestSpaceXLaunchPost();
+Twitter.makeNextSpaceXLaunchPost();
 
 /* Lets start to refactor this */
 

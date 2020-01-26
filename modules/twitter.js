@@ -43,7 +43,22 @@ const makeLatestSpaceXLaunchPost = () => {
 				status = '#SpaceX Mission ' + result.missionName + ' launched successfully on ' + result.launchDate;
 				_makeImagePost(result.data, status).then(data => {
 					firebase.spacex.latestLaunches.writeEntry(data.id, result.missionName, result.launchDate);
-				}).catch(error => console.log('IMAGE POST ERROR' + error));
+				}).catch(error => console.log(error));
+			}).catch(error => console.log(error));
+	}).catch(error => console.log(error));
+};
+
+const makeNextSpaceXLaunchPost = () => {
+	spaceX.nextLaunch.then(result => {
+		firebase.spacex.nextLaunches.noEntryExists(result.launchDate)
+			.then(() => {
+				status = 'The next SpaceX Mission ' + result.missionName + ' will launch on ' + result.launchDate + '. \n';
+				if (result.redditThread) {
+					status += 'Read more here: ' + result.redditThread;
+				}
+				_makeTextPost(status).then(data => {
+					firebase.spacex.nextLaunches.writeEntry(data.id, result.missionName, result.launchDate);
+				}).catch(error => console.log(error));
 			}).catch(error => console.log(error));
 	}).catch(error => console.log(error));
 };
@@ -76,13 +91,19 @@ const _uploadMedia = mediaObject => {
 	});
 };
 
-/* Careful! This function has not been tested yet */
 const _makeTextPost = status => {
-	twitter.post('statuses/update', {status}, (error, data, response) => {
-		console.log('A new post with the status ´' + data.text + '` has successfully been posted at ' + new Date().toLocaleString('en'));
+	return new Promise((resolve, reject) => {
+		twitter.post('statuses/update', {status}, (error, data, response) => {
+			if (!error) {
+				resolve(data);
+			} else {
+				reject(error);
+			}
+		});
 	});
+
 };
 
 const _getRandomHashtag = () => hashtags[Math.floor(Math.random()*hashtags.length)];
 
-module.exports = {makePictureOfTheDayPost, makeNearestEarthObjectPost, makeLatestSpaceXLaunchPost};
+module.exports = {makePictureOfTheDayPost, makeNearestEarthObjectPost, makeLatestSpaceXLaunchPost, makeNextSpaceXLaunchPost};
