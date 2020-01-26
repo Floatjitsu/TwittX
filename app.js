@@ -9,8 +9,8 @@ const hashtags = ['space','universe','cosmos','stars'];
 
 const Twitter = require('./modules/twitter');
 
-// Twitter.makePictureOfTheDayPost();
-Twitter.makeNearestEarthObjectPost();
+Twitter.makePictureOfTheDayPost();
+// Twitter.makeNearestEarthObjectPost();
 
 /* Lets start to refactor this */
 
@@ -56,7 +56,7 @@ Twitter.makeNearestEarthObjectPost();
 //
 // //runs SpaceX latest launch job every day at 1pm
 // const sSXLL = schedule.scheduleJob('0 13 * * *', () => {
-// //SpaceX latest launch post
+//SpaceX latest launch post
 // spacex.latestLaunch.then(result => {
 //     //At first we have to check if a post containing result.launchDate already exists in our firebase db
 //     firebase.spacex.latestLaunches.noEntryExists(result.launchDate).then(() => {
@@ -74,7 +74,7 @@ Twitter.makeNearestEarthObjectPost();
 //     }).catch(err => {
 //         //If we get to this point, a record already exists and we dont do a new spaceX launch post
 //         console.log(err);
-//     });
+    // });
 // }).catch(err => {
 //     console.log(err);
 // });

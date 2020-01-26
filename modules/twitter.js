@@ -1,7 +1,8 @@
 const T = require('twit');
 const config = require('../config');
 const nasa = require('./nasa');
-// const spaceX = require('./');
+const spaceX = require('./spacex');
+const firebase = require('./firebase');
 
 const twitter = new T(config.twitter);
 const hashtags = ['space','universe','cosmos','stars'];
@@ -19,7 +20,9 @@ const makePictureOfTheDayPost = () => {
 				break;
 			case 'image':
 				status = 'Here is your #NASA picture of the day ' + hashtag;
-				_makeImagePost(result.data, status);
+				_makeImagePost(result.data, status).then(result => {
+					console.log('SUCCESS! ' + result);
+				});
 				break;
 		}
 	}).catch(error => {
@@ -34,16 +37,24 @@ const makeNearestEarthObjectPost = () => {
 };
 
 const makeLatestSpaceXLaunchPost = () => {
-
+	spacex.latestLaunch.then(result => {
+		firebase.spacex.latestLaunches.noEntryExists(result.launchDate)
+			.then(() => {
+				status = '#SpaceX Mission ' + result.missionName + ' launched successfully on ' + result.launchDate;
+				_makeImagePost(result.data, status);
+			});
+	});
 };
 
 const _makeImagePost = (mediaObject, status) => {
-	_uploadMedia(mediaObject).then(mediaId => {
-		twitter.post('statuses/update', {status: status, media_ids: mediaId}, (error, data, response) => {
-			console.log('A new post with the status ´' + data.text + '` has successfull been posted at ' + new Date().toLocaleString('en'));
+	return new Promise(function(resolve, reject) {
+		_uploadMedia(mediaObject).then(mediaId => {
+			twitter.post('statuses/update', {status: status, media_ids: mediaId}, (error, data, response) => {
+				resolve(data.text);
+			});
+		}).catch(error => {
+			reject(error);
 		});
-	}).catch(error => {
-		console.log(error);
 	});
 };
 
