@@ -5,6 +5,5 @@ const Twitter = require('./modules/twitter');
 // Twitter.makeNearestEarthObjectPost();
 // Twitter.makeLatestSpaceXLaunchPost();
 // Twitter.makeNextSpaceXLaunchPost();
-
+Twitter.makeMarsRoverPicturePost();
 /* Lets start to refactor this */
-console.log(Twitter._getRandomHashtag());

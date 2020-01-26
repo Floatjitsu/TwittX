@@ -37,6 +37,16 @@ const makeNearestEarthObjectPost = () => {
 	});
 };
 
+const makeMarsRoverPicturePost = () => {
+	nasa.marsRoverPicture.then(result => {
+		const formattedDate = new Date(result.info.date).toLocaleDateString('en');
+		status = 'This picture from #Mars was taken on ' + formattedDate + ' by ' + result.info.roverName;
+		_makeImagePost(result.data, status)
+			.then(() => console.log('Mars Rover picture post was successful'))
+			.catch(error => console.log(error));
+	}).catch(error => console.log(error));
+}
+
 const makeLatestSpaceXLaunchPost = () => {
 	spaceX.latestLaunch.then(result => {
 		firebase.spacex.latestLaunches.noEntryExists(result.launchDate)
@@ -92,7 +102,6 @@ const _uploadMedia = mediaObject => {
 	});
 };
 
-
 const _makeTextPost = status => {
 	return new Promise((resolve, reject) => {
 		twitter.post('statuses/update', {status}, (error, data, response) => {
@@ -108,4 +117,4 @@ const _makeTextPost = status => {
 
 const _getRandomHashtag = () => hashtags[Math.floor(Math.random()*hashtags.length)];
 
-module.exports = {makePictureOfTheDayPost, makeNearestEarthObjectPost, makeLatestSpaceXLaunchPost, makeNextSpaceXLaunchPost};
+module.exports = {makePictureOfTheDayPost, makeMarsRoverPicturePost, makeNearestEarthObjectPost, makeLatestSpaceXLaunchPost, makeNextSpaceXLaunchPost};
