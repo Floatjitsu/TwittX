@@ -21,8 +21,8 @@ const makePictureOfTheDayPost = () => {
 			case 'image':
 				status = 'Here is your #NASA picture of the day ' + hashtag;
 				_makeImagePost(result.data, status).then(result => {
-					console.log('SUCCESS! ' + result);
-				});
+					console.log('SUCCESS! ' + result.text);
+				}).catch(error => console.log(error));
 				break;
 		}
 	}).catch(error => {
@@ -37,20 +37,26 @@ const makeNearestEarthObjectPost = () => {
 };
 
 const makeLatestSpaceXLaunchPost = () => {
-	spacex.latestLaunch.then(result => {
+	spaceX.latestLaunch.then(result => {
 		firebase.spacex.latestLaunches.noEntryExists(result.launchDate)
 			.then(() => {
 				status = '#SpaceX Mission ' + result.missionName + ' launched successfully on ' + result.launchDate;
-				_makeImagePost(result.data, status);
-			});
-	});
+				_makeImagePost(result.data, status).then(data => {
+					firebase.spacex.latestLaunches.writeEntry(data.id, result.missionName, result.launchDate);
+				}).catch(error => console.log('IMAGE POST ERROR' + error));
+			}).catch(error => console.log(error));
+	}).catch(error => console.log(error));
 };
 
 const _makeImagePost = (mediaObject, status) => {
 	return new Promise(function(resolve, reject) {
 		_uploadMedia(mediaObject).then(mediaId => {
 			twitter.post('statuses/update', {status: status, media_ids: mediaId}, (error, data, response) => {
-				resolve(data.text);
+				if (!error) {
+					resolve(data);
+				} else {
+					reject(error);
+				}
 			});
 		}).catch(error => {
 			reject(error);
@@ -64,7 +70,7 @@ const _uploadMedia = mediaObject => {
 			if (!error) {
 				resolve(data.media_id_string);
 			} else {
-				reject();
+				reject(error);
 			}
 		});
 	});
@@ -79,4 +85,4 @@ const _makeTextPost = status => {
 
 const _getRandomHashtag = () => hashtags[Math.floor(Math.random()*hashtags.length)];
 
-module.exports = {makePictureOfTheDayPost, makeNearestEarthObjectPost};
+module.exports = {makePictureOfTheDayPost, makeNearestEarthObjectPost, makeLatestSpaceXLaunchPost};
