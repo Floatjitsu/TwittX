@@ -1,6 +1,7 @@
 const T = require('twit');
 const config = require('../config');
-const nasa = require('./nasa.js');
+const nasa = require('./nasa');
+// const spaceX = require('./');
 
 const twitter = new T(config.twitter);
 const hashtags = ['space','universe','cosmos','stars'];
@@ -30,6 +31,10 @@ const makeNearestEarthObjectPost = () => {
 	nasa.nearEarthObjects.then(result => {
 		_makeTextPost(result.twitText);
 	});
+};
+
+const makeLatestSpaceXLaunchPost = () => {
+
 };
 
 const _makeImagePost = (mediaObject, status) => {
