@@ -92,6 +92,7 @@ const _uploadMedia = mediaObject => {
 	});
 };
 
+
 const _makeTextPost = status => {
 	return new Promise((resolve, reject) => {
 		twitter.post('statuses/update', {status}, (error, data, response) => {
