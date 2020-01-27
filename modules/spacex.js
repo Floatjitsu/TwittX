@@ -47,22 +47,27 @@ const _getImageUrlFromJsonBody = jsonBody => {
 			jsonBody.links.mission_patch_small;
 };
 
+let nextLaunchPostObject = {
+	missionName: '',
+	launchDate: null,
+	redditThread: ''
+};
+
 const nextLaunch = new Promise((resolve, reject) => {
 	request('https://api.spacexdata.com/v3/launches/next', (error, response, body) => {
 		if (response.statusCode === 200) {
-			const jsonBody = JSON.parse(body);
-			const missionName = jsonBody.mission_name;
-			const launchDate = jsonBody.launch_date_utc;
-			const redditThread = jsonBody.links.reddit_campaign;
-			resolve({
-				missionName: missionName,
-				launchDate: new Date(launchDate).toLocaleString('en'),
-				redditThread: redditThread
-			});
+			_fillNextLaunchPostObjectFromJsonBody(JSON.parse(body));
+			resolve(nextLaunchPostObject);
 		} else {
 			reject('Error while making API request to SpaceX next launch');
 		}
 	});
 });
+
+const _fillNextLaunchPostObjectFromJsonBody = jsonBody => {
+	nextLaunchPostObject.missionName = jsonBody.mission_name;
+	nextLaunchPostObject.launchDate = new Date(jsonBody.launch_date_utc).toLocaleString('en');
+	nextLaunchPostObject.redditThread = jsonBody.links.reddit_campaign;
+}
 
 module.exports = {latestLaunch, nextLaunch};
