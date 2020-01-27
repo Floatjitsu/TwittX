@@ -13,12 +13,17 @@ module.exports = class ErrorLogHandler {
 		}
 	}
 
-	writeNewErrorEntry = error => {
+	writeNewErrorEntry = (error, twitterPostName) => {
 		this.setError(error);
+		this.setErrorTwitterPostName(twitterPostName);
 		firebase.database().ref(firebasePostErrorPath).push(this.error);
 	}
 
 	setError = errorInformation => {
 		this.error.errorInformation = errorInformation;
+	}
+
+	setErrorTwitterPostName = twitterPostName => {
+		this.error.twitterPostName = twitterPostName;
 	}
 }

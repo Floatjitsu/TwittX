@@ -26,7 +26,7 @@ const makePictureOfTheDayPost = () => {
 					.then(() => {
 						console.log(_getPostSuccessMessage('Picture of the Day'));
 					}).catch(error => {
-						new ErrorHandler().writeNewErrorEntry(error);
+						new ErrorHandler().writeNewErrorEntry(error, 'Picture of the Day');
 				});
 				break;
 		}
@@ -40,7 +40,7 @@ const makeNearestEarthObjectPost = () => {
 		_makeTextPost(result.twitText)
 			.then(() => console.log(_getPostSuccessMessage('Nearest Earth Objects')))
 			.catch(error => {
-				new ErrorHandler().writeNewErrorEntry(error);
+				new ErrorHandler().writeNewErrorEntry(error, 'Nearest Earth Objects');
 			});
 	});
 };
