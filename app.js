@@ -8,7 +8,7 @@ const ErrorHandler = require('./modules/errorHandler');
 // Twitter.makeNextSpaceXLaunchPost();
 // Twitter.makeMarsRoverPicturePost();
 const errorHandler = new ErrorHandler();
-Twitter._uploadMedia().catch( error => errorHandler.writeNewErrorEntry(error) );
+// Twitter._makeImagePost().catch( error => errorHandler.writeNewErrorEntry(error) );
 
 
 /* Lets start to refactor this */
