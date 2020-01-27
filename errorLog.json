@@ -1,14 +1,10 @@
 {
   "errors": [
     {
-      "date": "26.1.2020",
-      "time": "21:43:33",
-      "message": "Test Error2"
-    },
-    {
-      "date": "26.1.2020",
-      "time": "21:45:57",
-      "message": "Test Error2"
+      "date": "27.1.2020",
+      "time": "18:43:56",
+      "message": "Missing required parameter: status.",
+      "functionName": "_makeTextPost"
     }
   ]
 }

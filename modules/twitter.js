@@ -108,7 +108,7 @@ const _makeTextPost = status => {
 			if (!error) {
 				resolve(data);
 			} else {
-				reject(error);
+				reject({message: error.message, functionName: '_makeTextPost'});
 			}
 		});
 	});
@@ -117,4 +117,4 @@ const _makeTextPost = status => {
 
 const _getRandomHashtag = () => hashtags[Math.floor(Math.random()*hashtags.length)];
 
-module.exports = {makePictureOfTheDayPost, makeMarsRoverPicturePost, makeNearestEarthObjectPost, makeLatestSpaceXLaunchPost, makeNextSpaceXLaunchPost};
+module.exports = {_makeTextPost, makePictureOfTheDayPost, makeMarsRoverPicturePost, makeNearestEarthObjectPost, makeLatestSpaceXLaunchPost, makeNextSpaceXLaunchPost};

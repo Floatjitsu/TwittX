@@ -8,12 +8,14 @@ module.exports = class ErrorLogHandler {
 		this.error = {
 			date: date.toLocaleDateString(),
 			time: date.toLocaleTimeString(),
-			message: ''
+			message: '',
+			functionName: ''
 		}
 	}
 
-	pushNewErrorMessage = message => {
-		this.error.message = message;
+	writeNewErrorEntry = error => {
+		this.error.message = error.message;
+		this.error.functionName = error.functionName;
 		ErrorLog.errors.push(this.error);
 		fs.writeFile(errorFileName, this.getErrorLogStringified(), 'utf8', (err) => {
 			console.log('wrote to file');

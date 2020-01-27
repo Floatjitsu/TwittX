@@ -7,7 +7,9 @@ const ErrorLog = require('./errorLogHandler');
 // Twitter.makeLatestSpaceXLaunchPost();
 // Twitter.makeNextSpaceXLaunchPost();
 // Twitter.makeMarsRoverPicturePost();
-const error = new ErrorLog();
-error.pushNewErrorMessage('Test Error2');
+const errorO = new ErrorLog();
+Twitter._makeTextPost().then().catch(error => {
+	errorO.writeNewErrorEntry(error);
+});
 
 /* Lets start to refactor this */
