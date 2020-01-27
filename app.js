@@ -1,9 +1,8 @@
 const schedule = require('node-schedule');
 const Twitter = require('./modules/twitter');
-const ErrorHandler = require('./modules/errorHandler');
 
 // Twitter.makePictureOfTheDayPost();
-// Twitter.makeNearestEarthObjectPost();
+Twitter.makeNearestEarthObjectPost();
 // Twitter.makeLatestSpaceXLaunchPost();
 // Twitter.makeNextSpaceXLaunchPost();
 // Twitter.makeMarsRoverPicturePost();

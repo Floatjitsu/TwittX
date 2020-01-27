@@ -24,9 +24,9 @@ const makePictureOfTheDayPost = () => {
 				status = 'Here is your #NASA picture of the day ' + hashtag;
 				_makeImagePost(result.data, status)
 					.then(() => {
-						console.log(_postSuccessMessage('Picture of the Day'));
+						console.log(_getPostSuccessMessage('Picture of the Day'));
 					}).catch(error => {
-						new ErrorHandler().writeNewErrorEntry(error);					
+						new ErrorHandler().writeNewErrorEntry(error);
 				});
 				break;
 		}
@@ -37,7 +37,11 @@ const makePictureOfTheDayPost = () => {
 
 const makeNearestEarthObjectPost = () => {
 	nasa.nearEarthObjects.then(result => {
-		_makeTextPost(result.twitText);
+		_makeTextPost(result.twitText)
+			.then(() => console.log(_getPostSuccessMessage('Nearest Earth Objects')))
+			.catch(error => {
+				new ErrorHandler().writeNewErrorEntry(error);
+			});
 	});
 };
 
@@ -119,7 +123,7 @@ const _makeTextPost = status => {
 
 };
 
-const _postSuccessMessage = postName => {
+const _getPostSuccessMessage = postName => {
 	const date = new Date().toLocaleDateString('en');
 	const time = new Date().toLocaleTimeString('en');
 
