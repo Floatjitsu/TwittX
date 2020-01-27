@@ -1,4 +1,5 @@
 const T = require('twit');
+const ErrorHandler = require('./errorHandler');
 const config = require('../config');
 const nasa = require('./nasa');
 const spaceX = require('./spacex');
@@ -21,9 +22,12 @@ const makePictureOfTheDayPost = () => {
 				break;
 			case 'image':
 				status = 'Here is your #NASA picture of the day ' + hashtag;
-				_makeImagePost(result.data, status).then(result => {
-					console.log('SUCCESS! ' + result.text);
-				}).catch(error => console.log(error));
+				_makeImagePost(result.data, status)
+					.then(() => {
+						console.log(_postSuccessMessage('Picture of the Day'));
+					}).catch(error => {
+						new ErrorHandler().writeNewErrorEntry(error);					
+				});
 				break;
 		}
 	}).catch(error => {
@@ -113,6 +117,13 @@ const _makeTextPost = status => {
 		});
 	});
 
+};
+
+const _postSuccessMessage = postName => {
+	const date = new Date().toLocaleDateString('en');
+	const time = new Date().toLocaleTimeString('en');
+
+	return 'Post ' + postName + ' has successfully been posted at ' + date + ' ' + time;
 };
 
 const _getRandomHashtag = () => hashtags[Math.floor(Math.random()*hashtags.length)];

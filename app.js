@@ -7,7 +7,7 @@ const ErrorHandler = require('./modules/errorHandler');
 // Twitter.makeLatestSpaceXLaunchPost();
 // Twitter.makeNextSpaceXLaunchPost();
 // Twitter.makeMarsRoverPicturePost();
-const errorHandler = new ErrorHandler();
+// const errorHandler = new ErrorHandler();
 // Twitter._makeImagePost().catch( error => errorHandler.writeNewErrorEntry(error) );
 
 
