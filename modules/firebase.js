@@ -1,5 +1,5 @@
 const firebase = require('firebase-admin');
-const config = require('../config.js')
+const config = require('../config.js');
 const serviceAccount = require(config.firebase.api_key);
 
 firebase.initializeApp({

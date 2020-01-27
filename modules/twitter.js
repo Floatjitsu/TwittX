@@ -96,7 +96,7 @@ const _uploadMedia = mediaObject => {
 			if (!error) {
 				resolve(data.media_id_string);
 			} else {
-				reject(error);
+				reject({message: error.message, functionName: '_uploadMedia'});
 			}
 		});
 	});
@@ -117,4 +117,4 @@ const _makeTextPost = status => {
 
 const _getRandomHashtag = () => hashtags[Math.floor(Math.random()*hashtags.length)];
 
-module.exports = {_makeTextPost, makePictureOfTheDayPost, makeMarsRoverPicturePost, makeNearestEarthObjectPost, makeLatestSpaceXLaunchPost, makeNextSpaceXLaunchPost};
+module.exports = {_uploadMedia, makePictureOfTheDayPost, makeMarsRoverPicturePost, makeNearestEarthObjectPost, makeLatestSpaceXLaunchPost, makeNextSpaceXLaunchPost};
