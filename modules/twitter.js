@@ -50,9 +50,13 @@ const makeMarsRoverPicturePost = () => {
 		const formattedDate = new Date(result.info.date).toLocaleDateString('en');
 		status = 'This picture from #Mars was taken on ' + formattedDate + ' by ' + result.info.roverName;
 		_makeImagePost(result.data, status)
-			.then(() => console.log('Mars Rover picture post was successful'))
-			.catch(error => console.log(error));
-	}).catch(error => console.log(error));
+			.then(() => console.log(_getPostSuccessMessage('Mars Rover Picture')))
+			.catch(error => {
+				new ErrorHandler().writeNewErrorEntry(error, 'Mars Rover Picture');
+			});
+	}).catch(error => {
+		new ErrorHandler().writeNewErrorEntry(error, 'Mars Rover Picture');
+	});
 }
 
 const makeLatestSpaceXLaunchPost = () => {
