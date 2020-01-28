@@ -1,7 +1,7 @@
 const config = require('../config.js');
 const firebase = require('firebase-admin');
 const serviceAccount = require(config.firebase.api_key);
-const firebasePostErrorPath = 'twitter/postErrors/';
+const firebasePostErrorPath = 'twitterPostErrors/';
 const apiCallErrorPath = 'apiErrors/';
 
 module.exports = class ErrorLogHandler {
