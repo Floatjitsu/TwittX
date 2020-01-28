@@ -1,4 +1,4 @@
-const firebase = require('./firebase.js');
+const firebase = require('./firebase');
 const request = require('request');
 const fs = require('fs');
 
@@ -14,7 +14,7 @@ const latestLaunch = new Promise((resolve, reject) => {
 	request('https://api.spacexdata.com/v3/launches/latest', (error, response, body) => {
 		if (response.statusCode === 200) {
 			const jsonBody = JSON.parse(body);
-			_filllatestLaunchPostInfoFromJson(jsonBody);
+			_fillLatestLaunchPostInfoFromJson(jsonBody);
 			const imageUrl = _getImageUrlFromJsonBody(jsonBody);
 			const fileName = imageUrl.split('/').pop();
 			request(imageUrl).pipe(fs.createWriteStream('./pictures/' + fileName)).on('close', () => {
@@ -28,7 +28,7 @@ const latestLaunch = new Promise((resolve, reject) => {
 	});
 });
 
-const _filllatestLaunchPostInfoFromJson = jsonBody => {
+const _fillLatestLaunchPostInfoFromJson = jsonBody => {
 	latestLaunchPostInfo.missionName = jsonBody.mission_name;
 	latestLaunchPostInfo.launchDate = new Date(jsonBody.launch_date_utc).toLocaleString('en');
 };
@@ -54,7 +54,7 @@ let nextLaunchPostObject = {
 };
 
 const nextLaunch = new Promise((resolve, reject) => {
-	request('https://api.spacexdata.com/v3/launches/nex', (error, response, body) => {
+	request('https://api.spacexdata.com/v3/launches/net', (error, response, body) => {
 		if (response.statusCode === 200) {
 			_fillNextLaunchPostObjectFromJsonBody(JSON.parse(body));
 			resolve(nextLaunchPostObject);

@@ -1,7 +1,7 @@
 const config = require('../config.js');
 const firebase = require('firebase-admin');
 const serviceAccount = require(config.firebase.api_key);
-const firebasePostErrorPath = 'twitterPostErrors/';
+const twitterPostErrorPath = 'twitterPostErrors/';
 const apiCallErrorPath = 'apiErrors/';
 
 module.exports = class ErrorLogHandler {
@@ -21,15 +21,10 @@ module.exports = class ErrorLogHandler {
 
 	writeNewPostErrorEntry = (error, twitterPostName) => {
 		this._setError(error);
-		this._setErrorTwitterPostName(twitterPostName);
-		firebase.database().ref(firebasePostErrorPath).push(this.error);
+		firebase.database().ref(twitterPostErrorPath + twitterPostName + '/').push(this.error);
 	}
 
 	_setError = errorInformation => {
 		this.error.errorInformation = errorInformation;
-	}
-
-	_setErrorTwitterPostName = twitterPostName => {
-		this.error.twitterPostName = twitterPostName;
 	}
 }

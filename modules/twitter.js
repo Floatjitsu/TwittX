@@ -66,8 +66,10 @@ const makeLatestSpaceXLaunchPost = () => {
 				status = '#SpaceX Mission ' + result.missionName + ' launched successfully on ' + result.launchDate;
 				_makeImagePost(result.data, status).then(data => {
 					firebase.spacex.latestLaunches.writeEntry(data.id, result.missionName, result.launchDate);
-				}).catch(error => console.log(error));
-			}).catch(error => console.log(error));
+				}).catch(error => {
+					new ErrorHandler().writeNewPostErrorEntry(error, 'Latest SpaceX Launch');
+				});
+			}).catch(entryExistsMessage => console.log(entryExistsMessage));
 	}).catch(error => {
 		new ErrorHandler().writeNewApiErrorEntry(error);
 	});
@@ -83,8 +85,10 @@ const makeNextSpaceXLaunchPost = () => {
 				}
 				_makeTextPost(status).then(data => {
 					firebase.spacex.nextLaunches.writeEntry(data.id, result.missionName, result.launchDate);
-				}).catch(error => console.log(error));
-			}).catch(error => console.log(error));
+				}).catch(error => {
+					new ErrorHandler().writeNewPostErrorEntry(error, 'Next SpaceX Launch');
+				});
+			}).catch(entryExistsMessage => console.log(entryExistsMessage));
 	}).catch(error => {
 		new ErrorHandler().writeNewApiErrorEntry(error);
 	});
