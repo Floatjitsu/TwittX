@@ -2,7 +2,7 @@ const firebase = require('./firebase.js');
 const request = require('request');
 const fs = require('fs');
 
-let latestLaunchPostObject = {
+let latestLaunchPostInfo = {
 	missionName: '',
 	launchDate: null,
 	data: {
@@ -14,27 +14,27 @@ const latestLaunch = new Promise((resolve, reject) => {
 	request('https://api.spacexdata.com/v3/launches/latest', (error, response, body) => {
 		if (response.statusCode === 200) {
 			const jsonBody = JSON.parse(body);
-			_fillLatestLaunchPostObjectFromJson(jsonBody);
+			_filllatestLaunchPostInfoFromJson(jsonBody);
 			const imageUrl = _getImageUrlFromJsonBody(jsonBody);
 			const fileName = imageUrl.split('/').pop();
 			request(imageUrl).pipe(fs.createWriteStream('./pictures/' + fileName)).on('close', () => {
                 const picture = _loadAndReturnPictureFromApiByFileName(fileName);
-				_setMediaDataInLatestLaunchPostObject(picture);
-				resolve(latestLaunchPostObject);
+				_setMediaDataInlatestLaunchPostInfo(picture);
+				resolve(latestLaunchPostInfo);
             });
 		} else {
-			reject('Error while making API request to SpaceX latest Launch');
+			reject({errorMessage: JSON.parse(body).error, apiName: 'SpaceX Latest Launch'});
 		}
 	});
 });
 
-const _fillLatestLaunchPostObjectFromJson = jsonBody => {
-	latestLaunchPostObject.missionName = jsonBody.mission_name;
-	latestLaunchPostObject.launchDate = new Date(jsonBody.launch_date_utc).toLocaleString('en');
+const _filllatestLaunchPostInfoFromJson = jsonBody => {
+	latestLaunchPostInfo.missionName = jsonBody.mission_name;
+	latestLaunchPostInfo.launchDate = new Date(jsonBody.launch_date_utc).toLocaleString('en');
 };
 
-const _setMediaDataInLatestLaunchPostObject = mediaData => {
-	latestLaunchPostObject.data.media_data = mediaData;
+const _setMediaDataInlatestLaunchPostInfo = mediaData => {
+	latestLaunchPostInfo.data.media_data = mediaData;
 };
 
 const _loadAndReturnPictureFromApiByFileName = fileName => {
@@ -54,12 +54,12 @@ let nextLaunchPostObject = {
 };
 
 const nextLaunch = new Promise((resolve, reject) => {
-	request('https://api.spacexdata.com/v3/launches/next', (error, response, body) => {
+	request('https://api.spacexdata.com/v3/launches/nex', (error, response, body) => {
 		if (response.statusCode === 200) {
 			_fillNextLaunchPostObjectFromJsonBody(JSON.parse(body));
 			resolve(nextLaunchPostObject);
 		} else {
-			reject('Error while making API request to SpaceX next launch');
+			reject({error: JSON.parse(body).error, apiName: 'SpaceX Next Launch'});
 		}
 	});
 });

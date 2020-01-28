@@ -26,7 +26,7 @@ const makePictureOfTheDayPost = () => {
 					.then(() => {
 						console.log(_getPostSuccessMessage('Picture of the Day'));
 					}).catch(error => {
-						new ErrorHandler().writeNewErrorEntry(error, 'Picture of the Day');
+						new ErrorHandler().writeNewPostErrorEntry(error, 'Picture of the Day');
 				});
 				break;
 		}
@@ -40,7 +40,7 @@ const makeNearestEarthObjectPost = () => {
 		_makeTextPost(result.twitText)
 			.then(() => console.log(_getPostSuccessMessage('Nearest Earth Objects')))
 			.catch(error => {
-				new ErrorHandler().writeNewErrorEntry(error, 'Nearest Earth Objects');
+				new ErrorHandler().writeNewPostErrorEntry(error, 'Nearest Earth Objects');
 			});
 	});
 };
@@ -52,10 +52,10 @@ const makeMarsRoverPicturePost = () => {
 		_makeImagePost(result.data, status)
 			.then(() => console.log(_getPostSuccessMessage('Mars Rover Picture')))
 			.catch(error => {
-				new ErrorHandler().writeNewErrorEntry(error, 'Mars Rover Picture');
+				new ErrorHandler().writeNewPostErrorEntry(error, 'Mars Rover Picture');
 			});
 	}).catch(error => {
-		new ErrorHandler().writeNewErrorEntry(error, 'Mars Rover Picture');
+		new ErrorHandler().writeNewPostErrorEntry(error, 'Mars Rover Picture');
 	});
 }
 
@@ -68,7 +68,9 @@ const makeLatestSpaceXLaunchPost = () => {
 					firebase.spacex.latestLaunches.writeEntry(data.id, result.missionName, result.launchDate);
 				}).catch(error => console.log(error));
 			}).catch(error => console.log(error));
-	}).catch(error => console.log(error));
+	}).catch(error => {
+		new ErrorHandler().writeNewApiErrorEntry(error);
+	});
 };
 
 const makeNextSpaceXLaunchPost = () => {
@@ -83,7 +85,9 @@ const makeNextSpaceXLaunchPost = () => {
 					firebase.spacex.nextLaunches.writeEntry(data.id, result.missionName, result.launchDate);
 				}).catch(error => console.log(error));
 			}).catch(error => console.log(error));
-	}).catch(error => console.log(error));
+	}).catch(error => {
+		new ErrorHandler().writeNewApiErrorEntry(error);
+	});
 };
 
 const _makeImagePost = (mediaObject, status) => {

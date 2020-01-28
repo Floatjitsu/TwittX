@@ -2,6 +2,7 @@ const config = require('../config.js');
 const firebase = require('firebase-admin');
 const serviceAccount = require(config.firebase.api_key);
 const firebasePostErrorPath = 'twitter/postErrors/';
+const apiCallErrorPath = 'apiErrors/';
 
 module.exports = class ErrorLogHandler {
 	constructor() {
@@ -13,17 +14,22 @@ module.exports = class ErrorLogHandler {
 		}
 	}
 
-	writeNewErrorEntry = (error, twitterPostName) => {
-		this.setError(error);
-		this.setErrorTwitterPostName(twitterPostName);
+	writeNewApiErrorEntry = (error) => {
+		this._setError(error);
+		firebase.database().ref(apiCallErrorPath + error.apiName + '/').push(this.error);
+	}
+
+	writeNewPostErrorEntry = (error, twitterPostName) => {
+		this._setError(error);
+		this._setErrorTwitterPostName(twitterPostName);
 		firebase.database().ref(firebasePostErrorPath).push(this.error);
 	}
 
-	setError = errorInformation => {
+	_setError = errorInformation => {
 		this.error.errorInformation = errorInformation;
 	}
 
-	setErrorTwitterPostName = twitterPostName => {
+	_setErrorTwitterPostName = twitterPostName => {
 		this.error.twitterPostName = twitterPostName;
 	}
 }
