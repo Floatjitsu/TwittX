@@ -1,5 +1,6 @@
-const schedule = require('node-schedule');
-const Twitter = require('./modules/twitter');
+const Scheduler = require('./modules/scheduler');
+
+Scheduler.scheduleNasaPictureOfTheDayPost();
 
 // Twitter.makePictureOfTheDayPost();
 // Twitter.makeNearestEarthObjectPost();
