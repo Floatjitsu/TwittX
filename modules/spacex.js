@@ -54,7 +54,7 @@ let nextLaunchPostObject = {
 };
 
 const nextLaunch = new Promise((resolve, reject) => {
-	request('https://api.spacexdata.com/v3/launches/net', (error, response, body) => {
+	request('https://api.spacexdata.com/v3/launches/next', (error, response, body) => {
 		if (response.statusCode === 200) {
 			_fillNextLaunchPostObjectFromJsonBody(JSON.parse(body));
 			resolve(nextLaunchPostObject);
