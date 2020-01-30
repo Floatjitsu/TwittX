@@ -9,7 +9,7 @@ module.exports = {
         api_key: '5WixNpypnqJ36Qgwdpgg7hXNzWnaMriHs6K5Eqy8'
     },
     firebase: {
-        api_key: '../twittx-9bf78-firebase-adminsdk-8w28w-fbcc126d8f.json',
+        api_key: '../twittx-9bf78-firebase-adminsdk-8w28w-eb32c75d0e.json',
         app_url: 'https://twittx-9bf78.firebaseio.com'
     }
 }

@@ -1,4 +1,5 @@
 const T = require('twit');
+const ErrorHandler = require('./errorHandler');
 const config = require('../config');
 const nasa = require('./nasa');
 const spaceX = require('./spacex');
@@ -21,9 +22,12 @@ const makePictureOfTheDayPost = () => {
 				break;
 			case 'image':
 				status = 'Here is your #NASA picture of the day ' + hashtag;
-				_makeImagePost(result.data, status).then(result => {
-					console.log('SUCCESS! ' + result.text);
-				}).catch(error => console.log(error));
+				_makeImagePost(result.data, status)
+					.then(() => {
+						console.log(_getPostSuccessMessage('Picture of the Day'));
+					}).catch(error => {
+						new ErrorHandler().writeNewPostErrorEntry(error, 'Picture of the Day');
+				});
 				break;
 		}
 	}).catch(error => {
@@ -33,7 +37,11 @@ const makePictureOfTheDayPost = () => {
 
 const makeNearestEarthObjectPost = () => {
 	nasa.nearEarthObjects.then(result => {
-		_makeTextPost(result.twitText);
+		_makeTextPost(result.twitText)
+			.then(() => console.log(_getPostSuccessMessage('Nearest Earth Objects')))
+			.catch(error => {
+				new ErrorHandler().writeNewPostErrorEntry(error, 'Nearest Earth Objects');
+			});
 	});
 };
 
@@ -42,9 +50,13 @@ const makeMarsRoverPicturePost = () => {
 		const formattedDate = new Date(result.info.date).toLocaleDateString('en');
 		status = 'This picture from #Mars was taken on ' + formattedDate + ' by ' + result.info.roverName;
 		_makeImagePost(result.data, status)
-			.then(() => console.log('Mars Rover picture post was successful'))
-			.catch(error => console.log(error));
-	}).catch(error => console.log(error));
+			.then(() => console.log(_getPostSuccessMessage('Mars Rover Picture')))
+			.catch(error => {
+				new ErrorHandler().writeNewPostErrorEntry(error, 'Mars Rover Picture');
+			});
+	}).catch(error => {
+		new ErrorHandler().writeNewPostErrorEntry(error, 'Mars Rover Picture');
+	});
 }
 
 const makeLatestSpaceXLaunchPost = () => {
@@ -54,9 +66,13 @@ const makeLatestSpaceXLaunchPost = () => {
 				status = '#SpaceX Mission ' + result.missionName + ' launched successfully on ' + result.launchDate;
 				_makeImagePost(result.data, status).then(data => {
 					firebase.spacex.latestLaunches.writeEntry(data.id, result.missionName, result.launchDate);
-				}).catch(error => console.log(error));
-			}).catch(error => console.log(error));
-	}).catch(error => console.log(error));
+				}).catch(error => {
+					new ErrorHandler().writeNewPostErrorEntry(error, 'Latest SpaceX Launch');
+				});
+			}).catch(entryExistsMessage => console.log(entryExistsMessage));
+	}).catch(error => {
+		new ErrorHandler().writeNewApiErrorEntry(error);
+	});
 };
 
 const makeNextSpaceXLaunchPost = () => {
@@ -69,9 +85,13 @@ const makeNextSpaceXLaunchPost = () => {
 				}
 				_makeTextPost(status).then(data => {
 					firebase.spacex.nextLaunches.writeEntry(data.id, result.missionName, result.launchDate);
-				}).catch(error => console.log(error));
-			}).catch(error => console.log(error));
-	}).catch(error => console.log(error));
+				}).catch(error => {
+					new ErrorHandler().writeNewPostErrorEntry(error, 'Next SpaceX Launch');
+				});
+			}).catch(entryExistsMessage => console.log(entryExistsMessage));
+	}).catch(error => {
+		new ErrorHandler().writeNewApiErrorEntry(error);
+	});
 };
 
 const _makeImagePost = (mediaObject, status) => {
@@ -81,11 +101,11 @@ const _makeImagePost = (mediaObject, status) => {
 				if (!error) {
 					resolve(data);
 				} else {
-					reject(error);
+					reject({message: error.message, functionName: '_makeImagePost'});
 				}
 			});
 		}).catch(error => {
-			reject(error);
+			reject({message: error.message, functionName: '_uploadMedia'});
 		});
 	});
 };
@@ -96,7 +116,7 @@ const _uploadMedia = mediaObject => {
 			if (!error) {
 				resolve(data.media_id_string);
 			} else {
-				reject(error);
+				reject({message: error.message, functionName: '_uploadMedia'});
 			}
 		});
 	});
@@ -108,11 +128,18 @@ const _makeTextPost = status => {
 			if (!error) {
 				resolve(data);
 			} else {
-				reject(error);
+				reject({message: error.message, functionName: '_makeTextPost'});
 			}
 		});
 	});
 
+};
+
+const _getPostSuccessMessage = postName => {
+	const date = new Date().toLocaleDateString('en');
+	const time = new Date().toLocaleTimeString('en');
+
+	return 'Post ' + postName + ' has successfully been posted at ' + date + ' ' + time;
 };
 
 const _getRandomHashtag = () => hashtags[Math.floor(Math.random()*hashtags.length)];
