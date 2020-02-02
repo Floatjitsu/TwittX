@@ -1,14 +1,10 @@
 const Scheduler = require('./modules/scheduler');
+const Twitter = require('./modules/twitter');
 
 Scheduler.scheduleNasaPictureOfTheDayPost();
 
-// Twitter.makePictureOfTheDayPost();
-// Twitter.makeNearestEarthObjectPost();
-// Twitter.makeLatestSpaceXLaunchPost();
-// Twitter.makeNextSpaceXLaunchPost();
-// Twitter.makeMarsRoverPicturePost();
-// const errorHandler = new ErrorHandler();
-// Twitter._makeImagePost().catch( error => errorHandler.writeNewErrorEntry(error) );
-
-
-/* Lets start to refactor this */
+Twitter.makePictureOfTheDayPost();
+Twitter.makeNearestEarthObjectPost();
+Twitter.makeLatestSpaceXLaunchPost();
+Twitter.makeNextSpaceXLaunchPost();
+Twitter.makeMarsRoverPicturePost();
