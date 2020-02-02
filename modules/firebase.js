@@ -24,14 +24,9 @@ const spacex = {
         },
         noEntryExists: (launchDate) => {
             return new Promise((resolve, reject) => {
-                firebase.database().ref('spaceX/posts/latestLaunches/').orderByChild('launchDate').equalTo(launchDate)
-                    .once('value').then(snapshot => {
-                        if(snapshot.exists()) {
-                            reject('A post for the latest launch date ' + launchDate + ' already exists!');
-                        } else {
-                            resolve();
-                        }
-                    });
+                _checkEntryExistence(latestLaunchesPath, launchDate)
+                    .then(() => resolve())
+                    .catch(error => reject(error));
             });
         }
     },
@@ -42,17 +37,25 @@ const spacex = {
         },
         noEntryExists: (launchDate) => {
             return new Promise((resolve, reject) => {
-                firebase.database().ref('spaceX/posts/nextLaunches/').orderByChild('launchDate').equalTo(launchDate)
-                    .once('value').then(snapshot => {
-                        if(snapshot.exists()) {
-                            reject('A post for the upcoming launch date ' + launchDate + ' already exists!');
-                        } else {
-                            resolve();
-                        }
-                    });
+                _checkEntryExistence(nextLaunchesPath, launchDate)
+                    .then(() => resolve())
+                    .catch(error => reject(error));
             });
         }
     }
+};
+
+const _checkEntryExistence = (path, launchDate) => {
+    return new Promise((resolve, reject) => {
+        firebase.database().ref(path).orderByChild('launchDate').equalTo(launchDate)
+            .once('value').then(snapshot => {
+                if (snapshot.exists()) {
+                    reject('A post for the launch date ' + launchDate + ' with firebase path ' + path + ' already exists!');
+                } else {
+                    resolve();
+                }
+            });
+    });
 };
 
 const _writeFirebaseEntry = (path, entryObject) => {
