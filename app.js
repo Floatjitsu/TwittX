@@ -3,8 +3,8 @@ const Twitter = require('./modules/twitter');
 
 Scheduler.scheduleNasaPictureOfTheDayPost();
 
-Twitter.makePictureOfTheDayPost();
-Twitter.makeNearestEarthObjectPost();
+// Twitter.makePictureOfTheDayPost();
+// Twitter.makeNearestEarthObjectPost();
 Twitter.makeLatestSpaceXLaunchPost();
 Twitter.makeNextSpaceXLaunchPost();
-Twitter.makeMarsRoverPicturePost();
+// Twitter.makeMarsRoverPicturePost();

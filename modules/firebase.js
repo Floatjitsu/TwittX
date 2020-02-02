@@ -2,19 +2,25 @@ const firebase = require('firebase-admin');
 const config = require('../config.js');
 const serviceAccount = require(config.firebase.api_key);
 
+const latestLaunchesPath = 'spaceX/posts/latestLaunches/';
+const nextLaunchesPath = 'spaceX/posts/nextLaunches/';
+
 firebase.initializeApp({
     credential: firebase.credential.cert(serviceAccount),
     databaseURL: config.firebase.app_url
 });
 
+let launchInformation = {
+    missionName: '',
+    launchDate: '',
+    postDate: null
+};
+
 const spacex = {
     latestLaunches: {
         writeEntry: (postId, missionName, launchDate) => {
-            firebase.database().ref('spaceX/posts/latestLaunches/' + postId).set({
-                missionName: missionName,
-                launchDate: launchDate,
-                postDate: new Date().toLocaleString('en')
-            });
+            _setLaunchInformation(missionName, launchDate);
+            _writeFirebaseEntry(latestLaunchesPath + postId, launchInformation);
         },
         noEntryExists: (launchDate) => {
             return new Promise((resolve, reject) => {
@@ -31,11 +37,8 @@ const spacex = {
     },
     nextLaunches: {
         writeEntry: (postId, missionName, launchDate) => {
-            firebase.database().ref('spaceX/posts/nextLaunches/' + postId).set({
-                missionName: missionName,
-                launchDate: launchDate,
-                postDate: new Date().toLocaleString('en')
-            });
+            _setLaunchInformation(missionName, launchDate);
+            _writeFirebaseEntry(nextLaunchesPath + postId, launchInformation);
         },
         noEntryExists: (launchDate) => {
             return new Promise((resolve, reject) => {
@@ -50,6 +53,16 @@ const spacex = {
             });
         }
     }
+};
+
+const _writeFirebaseEntry = (path, entryObject) => {
+    firebase.database().ref(path).set(entryObject);
+};
+
+const _setLaunchInformation = (missionName, launchDate) => {
+    launchInformation.missionName = missionName;
+    launchInformation.launchDate = launchDate;
+    launchInformation.postDate = new Date().toLocaleString('en')
 };
 
 module.exports = {spacex};
