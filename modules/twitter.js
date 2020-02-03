@@ -17,7 +17,6 @@ const makePictureOfTheDayPost = () => {
 		switch (result.mediaType) {
 			case 'video':
 				status = 'Here is your #NASA video of the day ' + hashtag + '\n' + result.data;
-				/* Careful! This has not been tested yet! */
 				_makeTextPost(status);
 				break;
 			case 'image':

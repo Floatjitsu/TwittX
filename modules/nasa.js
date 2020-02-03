@@ -4,9 +4,37 @@ const fs = require('fs');
 
 const pictureOfTheDayApiUrl = 'https://api.nasa.gov/planetary/apod?api_key=' + config.nasa.api_key;
 
+const roverNames = ['Opportunity', 'Curiosity'];
+
 let videoOfTheDayPostObject = {
     mediaType: 'video',
     data: ''
+};
+
+let pictureOfTheDayPostObject = {
+    mediaType: 'image',
+    data: {
+        media_data: null
+    }
+};
+
+let marsRoverPicturePostObject = {
+    info: {
+        roverName: '',
+        date: null
+    },
+    data: {
+        media_data: null
+    }
+};
+
+const _downloadImage = (url, fileName) => {
+    return new Promise((resolve, reject) => {
+        request(url).pipe(fs.createWriteStream('./pictures/' + fileName)).on('close', () => {
+            const imageFile = fs.readFileSync('pictures/' + fileName, _base64Parameter);
+            resolve(imageFile);
+        });
+    });
 };
 
 const pictureOfTheDay = new Promise((resolve, reject) => {
@@ -14,43 +42,16 @@ const pictureOfTheDay = new Promise((resolve, reject) => {
         const responseBody = JSON.parse(body);
         const responseUrl = responseBody.url;
         if (responseBody.media_type === videoOfTheDayPostObject.mediaType) {
-            console.log(responseBody.media_type);
             videoOfTheDayPostObject.data = responseUrl;
             resolve(videoOfTheDayPostObject);
+        } else if (responseBody.media_type === pictureOfTheDayPostObject.mediaType) {
+            _downloadImage(responseUrl, responseUrl.split('/').pop()).then(image => {
+                pictureOfTheDayPostObject.data.media_data = image;
+                resolve(pictureOfTheDayPostObject);
+            });
         }
     });
 });
-
-// const pictureOfTheDay = new Promise((resolve, reject) => {
-//     request('https://api.nasa.gov/planetary/apod?api_key=' + config.nasa.api_key, (error, response, body) => {
-//         const jsonBody = JSON.parse(body);
-//         const url = jsonBody.url;
-//         if(jsonBody.media_type === 'video') {
-//             //If media_type is equal to video, we only want to post the url of the video
-//             //That's why we only resolve with the received url
-//             resolve({
-//                 mediaType: jsonBody.media_type,
-//                 data: url
-//             });
-//         } else if(jsonBody.media_type === 'image') {
-//             const fileName = url.split('/').pop();
-//             //We need to download and save the image because it is necessary to upload it on Twitter before posting it
-//             request(url).pipe(fs.createWriteStream('./pictures/' + fileName)).on('close', () => {
-//                 const params = { encoding: 'base64' };
-//                 //Twitter accepts base64 encoded files for upload
-//                 const b64 = fs.readFileSync('pictures/' + fileName, params);
-//                 //Twitter needs an object in the form of {media_data: param} to upload images
-//                 //That is why we resolve with this type of object
-//                 resolve({
-//                     mediaType: jsonBody.media_type,
-//                     data: {
-//                         media_data: b64
-//                     }
-//                 });
-//             });
-//         } /* space for resolving with other possible media types (if there are any) */
-//     });
-// });
 
 const nearEarthObjects = new Promise((resolve, reject) => {
     const today = new Date().toJSON().slice(0,10); //todays date with form yyyy-mm-dd
@@ -103,42 +104,51 @@ const nearEarthObjects = new Promise((resolve, reject) => {
     });
 });
 
+const _getRandomRoverName = () => roverNames[Math.floor(Math.random() * roverNames.length)];
+
+const _generateRandomMarsRoverApiUrl = roverName => 'https://api.nasa.gov/mars-photos/api/v1/manifests/' + roverName + '?api_key=' + config.nasa.api_key;
+
+const _generateMarsPhotoDateFromPhotoArray = photoArray => photoArray[Math.floor(Math.random() * photoArray.length)].earth_date;
+
+const _makeMarsPhotosApiCall = url => {
+    return new Promise((resolve, reject) => {
+        request(url, (error, response, body) => {
+            if (!error) {
+                resolve(_getRandomPhotoUrl(JSON.parse(body).photos));
+            } else {
+                reject(error);
+            }
+        });
+    });
+};
+
+const _generateMarsPhotoUrl = (roverName, randomDate) => 'https://api.nasa.gov/mars-photos/api/v1/rovers/' + roverName + '/photos?earth_date=' + randomDate + '&api_key=' + config.nasa.api_key;
+
+const _getRandomPhotoUrl = photoArray => photoArray[Math.floor(Math.random() * photoArray.length)].img_src;
+
 const marsRoverPicture = new Promise((resolve, reject) => {
-    const roverNames = ['Opportunity', 'Curiosity'];
-    const randomRoverName = roverNames[Math.floor(Math.random() * roverNames.length)];
-    request('https://api.nasa.gov/mars-photos/api/v1/manifests/' + randomRoverName + '?api_key=' + config.nasa.api_key, (error, response, body) => {
+    const roverName = _getRandomRoverName();
+    request(_generateRandomMarsRoverApiUrl(roverName), (error, response, body) => {
         if (!error) {
-            const manifestPhotoArray = JSON.parse(body).photo_manifest.photos;
-            const randomDate = manifestPhotoArray[Math.floor(Math.random() * manifestPhotoArray.length)].earth_date;
-            request('https://api.nasa.gov/mars-photos/api/v1/rovers/' + randomRoverName + '/photos?earth_date=' + randomDate + '&api_key=' + config.nasa.api_key, (error2, response2, body2) => {
-                if (!error2) {
-                    const photoArray = JSON.parse(body2).photos;
-                    const randomPhotoUrl = photoArray[Math.floor(Math.random() * photoArray.length)].img_src;
-                    const fileName = randomPhotoUrl.split('/').pop();
-                    request(randomPhotoUrl).pipe(fs.createWriteStream('./pictures/' + fileName)).on('close', () => {
-                        const params = {
-                            encoding: 'base64'
-                        };
-                        const b64 = fs.readFileSync('pictures/' + fileName, params);
-                        resolve({
-                            info: {
-                                roverName: randomRoverName,
-                                date: randomDate
-                            },
-                            data: {
-                                media_data: b64
-                            }
-                        });
+            const randomDate = _generateMarsPhotoDateFromPhotoArray(JSON.parse(body).photo_manifest.photos);
+            _makeMarsPhotosApiCall(_generateMarsPhotoUrl(roverName, randomDate))
+                .then(photoUrl => {
+                    _downloadImage(photoUrl).then(photo => {
+                        marsRoverPicturePostObject.info.roverName = roverName;
+                        marsRoverPicturePostObject.info.date = randomDate;
+                        marsRoverPicturePostObject.data.media_data= photo;
+                        resolve(marsRoverPicturePostObject);
                     });
-                } else {
-                    reject(error2);
-                }
-            });
+                })
+                .catch(photoApiError => {
+                    reject(photoApiError);
+                });
         } else {
             reject(error);
         }
     });
 });
 
+const _base64Parameter = { encoding: 'base64' };
 
 module.exports = {pictureOfTheDay, nearEarthObjects, marsRoverPicture};
