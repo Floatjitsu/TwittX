@@ -2,36 +2,55 @@ const config = require('../config.js');
 const request = require('request');
 const fs = require('fs');
 
+const pictureOfTheDayApiUrl = 'https://api.nasa.gov/planetary/apod?api_key=' + config.nasa.api_key;
+
+let videoOfTheDayPostObject = {
+    mediaType: 'video',
+    data: ''
+};
+
 const pictureOfTheDay = new Promise((resolve, reject) => {
-    request('https://api.nasa.gov/planetary/apod?api_key=' + config.nasa.api_key, (error, response, body) => {
-        const jsonBody = JSON.parse(body);
-        const url = jsonBody.url;
-        if(jsonBody.media_type === 'video') {
-            //If media_type is equal to video, we only want to post the url of the video
-            //That's why we only resolve with the received url
-            resolve({
-                mediaType: jsonBody.media_type,
-                data: url
-            });
-        } else if(jsonBody.media_type === 'image') {
-            const fileName = url.split('/').pop();
-            //We need to download and save the image because it is necessary to upload it on Twitter before posting it
-            request(url).pipe(fs.createWriteStream('./pictures/' + fileName)).on('close', () => {
-                const params = { encoding: 'base64' };
-                //Twitter accepts base64 encoded files for upload
-                const b64 = fs.readFileSync('pictures/' + fileName, params);
-                //Twitter needs an object in the form of {media_data: param} to upload images
-                //That is why we resolve with this type of object
-                resolve({
-                    mediaType: jsonBody.media_type,
-                    data: {
-                        media_data: b64
-                    }
-                });
-            });
-        } /* space for resolving with other possible media types (if there are any) */
+    request(pictureOfTheDayApiUrl, (error, response, body) => {
+        const responseBody = JSON.parse(body);
+        const responseUrl = responseBody.url;
+        if (responseBody.media_type === videoOfTheDayPostObject.mediaType) {
+            console.log(responseBody.media_type);
+            videoOfTheDayPostObject.data = responseUrl;
+            resolve(videoOfTheDayPostObject);
+        }
     });
 });
+
+// const pictureOfTheDay = new Promise((resolve, reject) => {
+//     request('https://api.nasa.gov/planetary/apod?api_key=' + config.nasa.api_key, (error, response, body) => {
+//         const jsonBody = JSON.parse(body);
+//         const url = jsonBody.url;
+//         if(jsonBody.media_type === 'video') {
+//             //If media_type is equal to video, we only want to post the url of the video
+//             //That's why we only resolve with the received url
+//             resolve({
+//                 mediaType: jsonBody.media_type,
+//                 data: url
+//             });
+//         } else if(jsonBody.media_type === 'image') {
+//             const fileName = url.split('/').pop();
+//             //We need to download and save the image because it is necessary to upload it on Twitter before posting it
+//             request(url).pipe(fs.createWriteStream('./pictures/' + fileName)).on('close', () => {
+//                 const params = { encoding: 'base64' };
+//                 //Twitter accepts base64 encoded files for upload
+//                 const b64 = fs.readFileSync('pictures/' + fileName, params);
+//                 //Twitter needs an object in the form of {media_data: param} to upload images
+//                 //That is why we resolve with this type of object
+//                 resolve({
+//                     mediaType: jsonBody.media_type,
+//                     data: {
+//                         media_data: b64
+//                     }
+//                 });
+//             });
+//         } /* space for resolving with other possible media types (if there are any) */
+//     });
+// });
 
 const nearEarthObjects = new Promise((resolve, reject) => {
     const today = new Date().toJSON().slice(0,10); //todays date with form yyyy-mm-dd
