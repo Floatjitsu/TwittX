@@ -14,17 +14,17 @@ module.exports = class ErrorLogHandler {
 		}
 	}
 
-	writeNewApiErrorEntry = (error) => {
+	writeNewApiErrorEntry(error) {
 		this._setError(error);
 		firebase.database().ref(apiCallErrorPath + error.apiName + '/').push(this.error);
 	}
 
-	writeNewPostErrorEntry = (error, twitterPostName) => {
+	writeNewPostErrorEntry(error, twitterPostName) {
 		this._setError(error);
 		firebase.database().ref(twitterPostErrorPath + twitterPostName + '/').push(this.error);
 	}
 
-	_setError = errorInformation => {
+	_setError(errorInformation) {
 		this.error.errorInformation = errorInformation;
 	}
 }

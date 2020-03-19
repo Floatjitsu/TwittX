@@ -31,7 +31,11 @@ let marsRoverPicturePostObject = {
 const _downloadImage = (url, fileName) => {
     return new Promise((resolve, reject) => {
         request(url).pipe(fs.createWriteStream('./pictures/' + fileName)).on('close', () => {
+<<<<<<< HEAD
             const imageFile = fs.readFileSync('pictures/' + fileName, _base64Parameter);
+=======
+            const imageFile = fs.readFileSync('./pictures/' + fileName, _base64Parameter);
+>>>>>>> 0cd2fdc07b49c34cb86a72f9a537acf7d33158c1
             resolve(imageFile);
         });
     });
