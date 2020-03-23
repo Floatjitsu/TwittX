@@ -4,7 +4,7 @@ FOR TESTING PURPOSES ONLY
 
 const Twitter = require('./modules/twitter');
 // Twitter.makePictureOfTheDayPost();
- Twitter.makeNearestEarthObjectPost();
+// Twitter.makeNearestEarthObjectPost();
 // Twitter.makeLatestSpaceXLaunchPost();
 // Twitter.makeNextSpaceXLaunchPost();
 // Twitter.makeMarsRoverPicturePost();
