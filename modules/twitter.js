@@ -36,12 +36,20 @@ const makePictureOfTheDayPost = () => {
 
 const makeNearestEarthObjectPost = () => {
 	nasa.nearEarthObjects.then(result => {
-		_makeTextPost(result.twitText)
-			.then(() => console.log(_getPostSuccessMessage('Nearest Earth Objects')))
+		_setNearestEarthObjectPostText(result);
+		_makeTextPost(status)
+			.then(() => console.log(_getPostSuccessMessage('Nearest Earth Object')))
 			.catch(error => {
-				new ErrorHandler().writeNewPostErrorEntry(error, 'Nearest Earth Objects');
+				new ErrorHandler().writeNewPostErrorEntry(error, 'Nearest Earth Object');
 			});
 	});
+};
+
+const _setNearestEarthObjectPostText = nearestEarthObject => {
+	status = 'Today, the closest space object is ' + nearestEarthObject.distance +
+				' away from our earth.\n' + 'Its name is ' + nearestEarthObject.name +
+				' and it has a diameter of ' + nearestEarthObject.diameter + '\n' +
+				'Further information: ' + nearestEarthObject.furtherInfoUrl;
 };
 
 const makeMarsRoverPicturePost = () => {

@@ -28,6 +28,13 @@ let marsRoverPicturePostObject = {
     }
 };
 
+let nearestEarthObjectPostObject = {
+    distance: '',
+    name: '',
+    diameter: '',
+    furtherInfoUrl: ''
+};
+
 const _downloadImage = (url, fileName) => {
     return new Promise((resolve, reject) => {
         request(url).pipe(fs.createWriteStream('./pictures/' + fileName)).on('close', () => {
@@ -53,54 +60,42 @@ const pictureOfTheDay = new Promise((resolve, reject) => {
     });
 });
 
+const _generateNearestEarthObjectApiUrl = () => {
+    return 'https://api.nasa.gov/neo/rest/v1/feed?end_date' + _getTodaysDate() + '&api_key=' + config.nasa.api_key;
+};
+
+const _getTodaysDate = () => new Date().toJSON().slice(0,10);
+
+const _findObjectWithSmallestDistanceToEarth = nearestEarthObjects => {
+    let earthObject = nearestEarthObjects[0];
+    nearestEarthObjects.forEach((element, index) => {
+        if (element.close_approach_data[0].miss_distance.kilometers < earthObject.close_approach_data[0].miss_distance.kilometers) {
+            earthObject = element;
+        }
+    });
+    return earthObject;
+}
+
+const _buildNearestEarthObjectPostObject = nearestEarthObject => {
+    nearestEarthObjectPostObject.distance = Math.floor(nearestEarthObject.close_approach_data[0].miss_distance.kilometers) + ' kilometers';
+    nearestEarthObjectPostObject.name = nearestEarthObject.name;
+    nearestEarthObjectPostObject.diameter = _diameterFromKilometerToMeter(nearestEarthObject.estimated_diameter.kilometers.estimated_diameter_max);
+    nearestEarthObjectPostObject.furtherInfoUrl = nearestEarthObject.nasa_jpl_url;
+};
+
+/* Convert diameter to meter only if diameter is less than 1 km */
+const _diameterFromKilometerToMeter = diameter => {
+    if (diameter.toString().startsWith('0.')) {
+        return (diameter.toFixed(4) * 1000) + ' meters';
+    }
+    return diameter.toFixed(4) + ' kilometers';
+};
+
 const nearEarthObjects = new Promise((resolve, reject) => {
-    const today = new Date().toJSON().slice(0,10); //todays date with form yyyy-mm-dd
-    request('https://api.nasa.gov/neo/rest/v1/feed?end_date=' + today +'&api_key=' + config.nasa.api_key, (error, response, body) => {
-        const jsonBody = JSON.parse(body);
-        const jsonObjects = jsonBody.near_earth_objects;
-
-        let closestIdx = 0;
-        let closestObject = 0;
-        jsonObjects[today].forEach(function(nearObject, index){
-            if(index === 0){
-                closestObject = parseFloat(nearObject.close_approach_data[0].miss_distance.kilometers);
-            }else{
-                if(parseFloat(nearObject.close_approach_data[0].miss_distance.kilometers) < closestObject){
-                    closestIdx = index;
-                    closestObject = parseFloat(nearObject.close_approach_data[0].miss_distance.kilometers);
-                }
-            }
-        });
-        const nearestObject = jsonObjects[today][closestIdx]; //save closest object
-
-        const countObjects = jsonBody.element_count;
-        const name = nearestObject.name;
-        const missDistance = nearestObject.close_approach_data[0].miss_distance.kilometers;
-        const closeApproachTime = nearestObject.close_approach_data[0].close_approach_date_full.split(" ")[1];
-        const sizeMetersMax = nearestObject.estimated_diameter.meters.estimated_diameter_max;
-        const velosityKmh = nearestObject.close_approach_data[0].relative_velocity.kilometers_per_hour;
-        const potentiallyHazardous = nearestObject.is_potentially_hazardous_asteroid;
-        const furtherInfoUrl = nearestObject.nasa_jpl_url;
-
-
-
-
-
-        const twitText = 'Today are ' + countObjects + ' asteroids near the Earth.\n' +
-                                 'The nearest asteroid has the name ' + name + ' and is ' + parseFloat(missDistance).toFixed(2) + ' kilometers away from the Earth at the time of '+ closeApproachTime + '.\n' +
-                                 'Estimated size: ' + parseFloat(sizeMetersMax).toFixed(2) + ' meter\n' +
-                                 'Estimated speed: ' + parseFloat(velosityKmh).toFixed(2) + ' km/h\n' +
-                                 //TODO 'Is Hazardous?: ' + potentiallyHazardous + '\n' +
-                                 'Further Informations: \n' +
-                                 furtherInfoUrl;
-
-        if (response.statusCode === 200) {
-            resolve({
-                twitText
-            });
-        }else {
-			reject('Error while making NASA NearEartObjects API request');
-		}
+    request(_generateNearestEarthObjectApiUrl(), (error, response, body) => {
+        const nearestEarthObject = _findObjectWithSmallestDistanceToEarth(JSON.parse(body).near_earth_objects[_getTodaysDate()]);
+        _buildNearestEarthObjectPostObject(nearestEarthObject);
+        resolve(nearestEarthObjectPostObject);
     });
 });
 
